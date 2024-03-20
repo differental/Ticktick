@@ -79,12 +79,14 @@ if __name__ == "__main__":
 
     timer = Timer(countdown_time, 38, profile, music_file)
     timer_thread = threading.Thread(target=timer.countdown)
+    timer_thread.daemon = True
     timer_thread.start()
 
     #keyboard.add_hotkey('p', timer.pause)
     #keyboard.add_hotkey('q', timer.stop)
 
     input_thread = threading.Thread(target=get_input)
+    input_thread.daemon = True
     input_thread.start()
 
     while timer_thread.is_alive():
