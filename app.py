@@ -73,9 +73,9 @@ def get_input():
 
 if __name__ == "__main__":
 
-    countdown_time = 45
+    countdown_time = int(input("Countdown in seconds: "))
     music_file = "alarm_sound.mp3"
-    profile = (10, 0.1, 100) # initial in %, time interval of increasing 1% in s, final in %
+    profile = (1, 0.1, 100) # initial in %, time interval of increasing 1% in s, final in %
 
     timer = Timer(countdown_time, 38, profile, music_file)
     timer_thread = threading.Thread(target=timer.countdown)
