@@ -5,6 +5,7 @@ import keyboard
 import sys
 import tty
 import termios
+import argparse
 
 class Timer:
     def __init__(self, seconds, startsec, profile, file_path):
@@ -34,7 +35,7 @@ class Timer:
                 pygame.mixer.music.unpause()
                 pygame.mixer.music.fadeout(5000)
                 break
-            print(f"Time remaining: {i} seconds")
+            print("Time remaining: " + (f"{i//3600} hr " if i >= 3600 else "") + (f"{i//60%60} min " if i >= 60 else "") + f"{i%60} s")
             if i == self.startsec:
                 print("Starting Music")
                 pygame.mixer.music.play()
@@ -73,11 +74,25 @@ def get_input():
 
 if __name__ == "__main__":
 
-    countdown_time = int(input("Countdown in seconds: "))
-    music_file = "alarm_sound.mp3"
-    profile = (1, 0.1, 100) # initial in %, time interval of increasing 1% in s, final in %
+    parser = argparse.ArgumentParser(description="""test""",
+                                 formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument("-f", "--file-name", help="Alarm music file name")
+    parser.add_argument("-t", "--time", help="Timer in seconds")
+    parser.add_argument("-i", "--initial-time", help="Time between music start and timer up")
+    parser.add_argument("-d", "--delta-time", help="Time interval in seconds to increase 1%")
 
-    timer = Timer(countdown_time, 38, profile, music_file)
+    args = parser.parse_args()
+    config = vars(args)
+    countdown_time = int(config['time'])
+    music_file = str(config['file_name'])
+    initial_time = int(config['initial_time'])
+    delta_time = float(config['delta_time'])
+
+    #countdown_time = int(input("Countdown in seconds: "))
+    #music_file = "alarm_sound.mp3"
+    profile = (1, delta_time, 100) # initial in %, time interval of increasing 1% in s, final in %
+
+    timer = Timer(countdown_time, initial_time, profile, music_file)
     timer_thread = threading.Thread(target=timer.countdown)
     timer_thread.daemon = True
     timer_thread.start()
