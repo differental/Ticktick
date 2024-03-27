@@ -1,7 +1,7 @@
 import time
 import pygame
 import threading
-import keyboard
+#import keyboard
 import sys
 import tty
 import termios
