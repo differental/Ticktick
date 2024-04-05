@@ -40,12 +40,29 @@ class Timer:
                 print("Starting Music")
                 pygame.mixer.music.play()
             time.sleep(1)
-        print("Time's up!")
+        print("Time's up!") 
+
+        start = time.time()
 
         while pygame.mixer.music.get_busy() and vol < self.profile[2]/100 and not self.stopped:
             vol += 0.01
             pygame.mixer.music.set_volume(vol)
             time.sleep(self.profile[1])
+
+        for i in range(int(time.time() - start), 1000000, 1):
+            if self.paused:
+                #if pygame.mixer.music.get_busy():
+                pygame.mixer.music.pause()
+                while self.paused:
+                    time.sleep(0.1)
+                pygame.mixer.music.unpause()
+            if self.stopped:
+                #if pygame.mixer.music.get_pos():
+                pygame.mixer.music.unpause()
+                pygame.mixer.music.fadeout(5000)
+                break
+            print("Time over: " + (f"{i//3600} hr " if i >= 3600 else "") + (f"{i//60%60} min " if i >= 60 else "") + f"{i%60} s") 
+            time.sleep(1)
     
         while pygame.mixer.music.get_busy() and not self.stopped:
             pass
